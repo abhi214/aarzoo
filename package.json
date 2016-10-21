@@ -1,0 +1,33 @@
+{
+  "name": "aarzoo",
+  "version": "1.0.0",
+  "description": "Aarzoo is a platform to share your shopping experience with family & friends.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abhi214/aarzoo.git"
+  },
+  "author": "Abhinav Agarwal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abhi214/aarzoo/issues"
+  },
+  "homepage": "https://github.com/abhi214/aarzoo#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "mysql": "^2.11.1",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-react": "^6.16.0",
+    "css-loader": "^0.25.0",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.2"
+  }
+}
