@@ -1,21 +1,26 @@
 import React from 'react';
-import Immutable from 'immutable';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import ViewWishlists from './ViewWishlists';
+import Wishlist from './Wishlist';
+import WishlistsContainer from './WishlistsContainer';
 
-const SitesBodyApp = React.createClass({
+const App = React.createClass({
   propTypes: {
     store: React.PropTypes.object.isRequired
   },
   getDefaultProps() {
-    return {
-      backgroundElement: APPIAN_CONTENT_DIV
-    };
-  },
-  renderMissingComponent(model, type, additionalProps, {eventsCreator, i18nInfo} = {}) {
-    failOnMissingComponents(type, eventsCreator, i18nInfo);
+    return {};
   },
   render() {
-  
+    const { store } = this.props;
+    const { wishlists, activeWishlist} = store.getState();
+    const view = activeWishlist ? <Wishlist wish={activeWishlist} /> :
+      (wishlists && wishlists.length > 0) ? <WishlistsContainer dispatch={store.dispatch} wishlists={wishlists}/> :
+      <ViewWishlists/>;
+      return (
+        <MuiThemeProvider>{view}</MuiThemeProvider>
+      );
   }
 });
 
-export default SitesBodyApp;
+export default App;

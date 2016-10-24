@@ -17,12 +17,12 @@ module.exports = {
     loaders: [
       {
         test: /\.jsx?$/i,
-        loader: 'babel',
+        loader: 'babel-loader',
         exclude: [
           /node_modules/
         ],
         query: {
-          presets: ['react']
+          presets: ['es2015', 'react']
         }
       },
       {
