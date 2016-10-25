@@ -65,7 +65,7 @@ app.post('/createWishlist/:name', function (req, res) {
     if (err) {
       throw err;
     }
-
+    console.log('Check this out Abhi: ' + result.insertId);
     res.json(result.insertId);
   });
   endConnectionToDB();

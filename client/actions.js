@@ -17,3 +17,24 @@ export function wishlistSelected(wishlistId) {
       }
     });
 }
+
+export const UNSELECT_WISHLIST = 'UNSELECT_WISHLIST';
+export function unselectWishlist() {
+  return { type: UNSELECT_WISHLIST };
+}
+
+export const CREATE_WISHLIST = 'CREATE_WISHLIST';
+export function createWishlist(wishlistName) {
+  return fetch(`http://localhost:3000/createWishlist/${wishlistName}`,
+    { method: 'POST' }
+  ).then(response => response.json())
+    .then(json => {
+      return {
+        type: CREATE_WISHLIST,
+        payload: {
+          id: json,
+          name: wishlistName
+        }
+      }
+    });
+}

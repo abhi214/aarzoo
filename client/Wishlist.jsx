@@ -11,8 +11,9 @@ import {List, ListItem} from 'material-ui/List';
 import Create from 'material-ui/svg-icons/content/create';
 import Avatar from 'material-ui/Avatar';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
-import {yellow600} from 'material-ui/styles/colors';
+import {pink200} from 'material-ui/styles/colors';
 
+import { unselectWishlist } from './actions';
 
 const appBarStyle = {
   title: {
@@ -29,37 +30,42 @@ const addWishlistStyle = {
 };
 const Wishlist = React.createClass({
   propTypes: {
+    dispatch: React.PropTypes.func,
+    wishlist: React.PropTypes.object
+  },
+  renderWish(wish) {
+    const { item, description, price } = wish;
+    return (
+      <ListItem
+        leftIcon={<ActionGrade color={pink200} />}
+        rightIcon={<Create />}
+        primaryText={item}
+        secondaryText={`Price: \$${price} | ${description}`}
+        secondaryTextLines={2}
+      />
+    );
+  },
+  onReturnToWishlists() {
+    this.props.dispatch(unselectWishlist());
   },
   render() {
+    const { name, items } = this.props.wishlist;
+    const wishes = items.map((item) => {
+      return this.renderWish(item);
+    });
     return (
       <div>
         <AppBar
-          title={<span style={appBarStyle.title}>My Wishlist</span>}
-          iconElementLeft={<IconButton><NavigationClose /></IconButton>}
+          title={<span style={appBarStyle.title}>{name}</span>}
+          iconElementLeft={
+            <IconButton onClick={this.onReturnToWishlists}>
+              <NavigationClose />
+            </IconButton>
+          }
           iconElementRight={<FlatButton label="Save" />}
         />
         <div>
-          <List>
-            <ListItem
-              leftIcon={<ActionGrade color={yellow600} />}
-              rightIcon={<Create />}
-              primaryText="Wish One"
-              secondaryText="Price: $29.99 | Wish Description"
-              secondaryTextLines={2}
-            />
-            <ListItem
-              leftIcon={<ActionGrade color={yellow600} />}
-              rightIcon={<Create />}
-              primaryText="Wish Two"
-              secondaryText="Price: $50.99 | Wish Description"
-            />
-            <ListItem
-              leftIcon={<ActionGrade color={yellow600} />}
-              rightIcon={<Create />}
-              primaryText="Wish Three"
-              secondaryText="Price: $299.99 | Wish Description"
-            />
-          </List>
+          <List>{wishes}</List>
         </div>
         <FloatingActionButton style={addWishlistStyle}>
           <ContentAdd />
