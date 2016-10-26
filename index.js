@@ -99,7 +99,7 @@ app.post('/addWishlistItem', function (req, res) {
   const { item, description, link, price, wishlist_id, priority } = req.body;
   //TODO: Handle the case where priority is null
   connection.query(
-    'INSERT INTO wishlist_items (item, description, link, price, wishlist_id, wish_priority) VALUES (?, ?, ?, ?, ?, ?)',
+    'INSERT INTO wishlist_items (item, description, link, price, wishlist_id, priority) VALUES (?, ?, ?, ?, ?, ?)',
     [item, description, link, price, wishlist_id, priority],
     function(err, result) {
       if (err) {

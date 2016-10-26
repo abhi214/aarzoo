@@ -13,6 +13,7 @@ import Avatar from 'material-ui/Avatar';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
 import {pink200} from 'material-ui/styles/colors';
 
+import WishCreator from './WishCreator';
 import { unselectWishlist } from './actions';
 
 const appBarStyle = {
@@ -33,6 +34,20 @@ const Wishlist = React.createClass({
     dispatch: React.PropTypes.func,
     wishlist: React.PropTypes.object
   },
+  getInitialState() {
+    return {
+      showCreateWishDialog: false
+    }
+  },
+  onReturnToWishlists() {
+    this.props.dispatch(unselectWishlist());
+  },
+  onOpenCreateWishDialog() {
+    this.showDialog(true);
+  },
+  showDialog(showDialog) {
+    this.setState({showCreateWishDialog: showDialog});
+  },
   renderWish(wish) {
     const { item, description, price } = wish;
     return (
@@ -45,11 +60,9 @@ const Wishlist = React.createClass({
       />
     );
   },
-  onReturnToWishlists() {
-    this.props.dispatch(unselectWishlist());
-  },
   render() {
-    const { name, items } = this.props.wishlist;
+    const { wishlist, dispatch } = this.props;
+    const { id, name, items } = wishlist;
     const wishes = items.map((item) => {
       return this.renderWish(item);
     });
@@ -62,14 +75,21 @@ const Wishlist = React.createClass({
               <NavigationClose />
             </IconButton>
           }
-          iconElementRight={<FlatButton label="Save" />}
         />
         <div>
           <List>{wishes}</List>
         </div>
-        <FloatingActionButton style={addWishlistStyle}>
+        <FloatingActionButton
+          onClick={this.onOpenCreateWishDialog}
+          style={addWishlistStyle}>
           <ContentAdd />
         </FloatingActionButton>
+        <WishCreator
+          dispatch={dispatch}
+          showDialog={this.state.showCreateWishDialog}
+          showDialogCallback={this.showDialog}
+          wishlist_id={id}
+          currNumWishes={items.length} />
       </div>
     );
   }

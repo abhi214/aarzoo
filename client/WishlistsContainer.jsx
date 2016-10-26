@@ -21,9 +21,7 @@ const paperStyle = {
 };
 
 const appBarStyle = {
-  title: {
-    cursor: 'pointer'
-  },
+  textAlign: 'start'
 };
 
 const wishlistsContainerStyle = {
@@ -69,7 +67,8 @@ const WishlistsContainer = React.createClass({
     return (
       <div style={wishlistsContainerStyle}>
         <AppBar
-          title={<span style={appBarStyle.title}>Wishlists</span>}
+          style={appBarStyle}
+          title={<span>Wishlists</span>}
           iconElementLeft={<IconButton><CardGiftcard /></IconButton>}
         />
         <div style={wishlistsContainerStyle}>{wishlistPapers}</div>

@@ -13,7 +13,7 @@ export function wishlistSelected(wishlistId) {
     .then(json => {
       return {
         type: WISHLIST_SELECTED,
-        payload: json
+        payload: Object.assign(json, {id: wishlistId})
       }
     });
 }
@@ -35,6 +35,48 @@ export function createWishlist(wishlistName) {
           id: json,
           name: wishlistName
         }
+      }
+    });
+}
+
+export const CREATE_WISH = 'CREATE_WISH';
+export function createWish(wish) {
+  const reqBodyData = JSON.stringify(wish);
+  return fetch(`http://localhost:3000/addWishlistItem`,
+    {
+      method: 'POST',
+      body: reqBodyData,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }
+  ).then(response => response.json())
+    .then(json => {
+      return {
+        type: CREATE_WISH,
+        payload: Object.assign({}, wish, { id: json })
+      }
+    });
+}
+
+export const UPDATE_WISH = 'UPDATE_WISH';
+export function updateWish(wish) {
+  const reqBodyData = JSON.stringify(wish);
+  return fetch(`http://localhost:3000/updateWishlistItem`,
+    {
+      method: 'POST',
+      body: reqBodyData,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }
+  ).then(response => response.json())
+    .then(json => {
+      return {
+        type: UPDATE_WISH,
+        payload: Object.assign({}, wish, { id: json })
       }
     });
 }
