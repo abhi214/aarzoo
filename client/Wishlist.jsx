@@ -21,14 +21,13 @@ const appBarStyle = {
     cursor: 'pointer'
   },
 };
-
-const wishlistsContainerStyle = {
-  textAlign: 'center'
+const addWishlistContainerStyle = {
+  textAlign: 'right'
 }
-
 const addWishlistStyle = {
   marginTop: 20
 };
+
 const Wishlist = React.createClass({
   propTypes: {
     dispatch: React.PropTypes.func,
@@ -36,7 +35,8 @@ const Wishlist = React.createClass({
   },
   getInitialState() {
     return {
-      showCreateWishDialog: false
+      showCreateWishDialog: false,
+      selectedWish: undefined
     }
   },
   onReturnToWishlists() {
@@ -45,15 +45,40 @@ const Wishlist = React.createClass({
   onOpenCreateWishDialog() {
     this.showDialog(true);
   },
-  showDialog(showDialog) {
-    this.setState({showCreateWishDialog: showDialog});
+  onOpenEditWishDialog(event, wish) {
+    event.stopPropagation();
+    this.setState({
+      showCreateWishDialog: true,
+      selectedWish: Object.assign({}, wish)
+    });
   },
-  renderWish(wish) {
-    const { item, description, price } = wish;
+  showDialog(showDialog) {
+    this.setState({showCreateWishDialog: showDialog, selectedWish: undefined});
+  },
+  modifySelectedWish(property, value) {
+    let newState = Object.assign({}, this.state);
+    newState.selectedWish[property] = value;
+    this.setState(newState);
+  },
+  safeOpen(link) {
+    const openedWindow = window.open(link);
+    if (openedWindow) {
+      openedWindow.opener = null;
+      openedWindow.location = link;
+    }
+  },
+  renderWish(wish, index) {
+    const { item, description, link, price } = wish;
     return (
       <ListItem
+        key={`wish_${index}`}
         leftIcon={<ActionGrade color={pink200} />}
-        rightIcon={<Create />}
+        onClick={()=>this.safeOpen(link)}
+        rightIconButton={
+          <IconButton onClick={(event) => this.onOpenEditWishDialog(event, wish)}>
+            <Create />
+          </IconButton>
+        }
         primaryText={item}
         secondaryText={`Price: \$${price} | ${description}`}
         secondaryTextLines={2}
@@ -63,8 +88,8 @@ const Wishlist = React.createClass({
   render() {
     const { wishlist, dispatch } = this.props;
     const { id, name, items } = wishlist;
-    const wishes = items.map((item) => {
-      return this.renderWish(item);
+    const wishes = items.map((item, index) => {
+      return this.renderWish(item, index);
     });
     return (
       <div>
@@ -79,17 +104,21 @@ const Wishlist = React.createClass({
         <div>
           <List>{wishes}</List>
         </div>
-        <FloatingActionButton
-          onClick={this.onOpenCreateWishDialog}
-          style={addWishlistStyle}>
-          <ContentAdd />
-        </FloatingActionButton>
+        <div style={addWishlistContainerStyle}>
+          <FloatingActionButton
+            onClick={this.onOpenCreateWishDialog}
+            style={addWishlistStyle}>
+            <ContentAdd />
+          </FloatingActionButton>
+        </div>
         <WishCreator
           dispatch={dispatch}
           showDialog={this.state.showCreateWishDialog}
           showDialogCallback={this.showDialog}
           wishlist_id={id}
-          currNumWishes={items.length} />
+          currNumWishes={items.length}
+          existingWish={this.state.selectedWish}
+          existingWishCallback={this.modifySelectedWish} />
       </div>
     );
   }

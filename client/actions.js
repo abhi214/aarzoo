@@ -76,7 +76,24 @@ export function updateWish(wish) {
     .then(json => {
       return {
         type: UPDATE_WISH,
-        payload: Object.assign({}, wish, { id: json })
+        payload: Object.assign({}, wish)
       }
     });
+}
+
+export const WISH_SELECTED_TO_MODIFY = 'WISH_SELECTED_TO_MODIFY';
+export function wishSelectedToModify(wish) {
+    return {
+      type: WISH_SELECTED_TO_MODIFY,
+      payload: wish
+    }
+}
+
+export const MODIFY_SELECTED_WISH = 'WISH_SELECTED_TO_MODIFY';
+export function modifySelectedWish(property, value) {
+    return {
+      type: MODIFY_SELECTED_WISH,
+      property: property,
+      value: value
+    }
 }

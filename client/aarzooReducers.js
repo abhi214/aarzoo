@@ -4,7 +4,10 @@ import {
   WISHLIST_SELECTED,
   UNSELECT_WISHLIST,
   CREATE_WISHLIST,
-  CREATE_WISH
+  CREATE_WISH,
+  UPDATE_WISH,
+  WISH_SELECTED_TO_MODIFY,
+  MODIFY_SELECTED_WISH
 } from './actions';
 
 function wishlists(state = [], action) {
@@ -25,13 +28,35 @@ function wishes(state = false, action) {
       return false;
     case CREATE_WISH:
       return Object.assign({}, state, { items: state.items.concat(action.payload) });
+    case UPDATE_WISH:
+      if(!state) {
+        return { items: [action.payload] };
+      } else {
+        let updatedItems = state.items.slice(0);
+        const index = updatedItems.map((item) => item.id).indexOf(action.payload.id);
+        updatedItems[index] = action.payload;
+        return Object.assign({}, state, { items: updatedItems});
+      }
+  }
+  return state;
+}
+
+function selectedWish(state = false, action) {
+  switch(action.type) {
+    case WISH_SELECTED_TO_MODIFY:
+      return action.payload;
+    case MODIFY_SELECTED_WISH:
+      let newState = Object.assign({}, state);
+      newState[action.property] = action.value;
+      return newState;
   }
   return state;
 }
 
 const aarzooReducers = combineReducers({
   wishlists,
-  activeWishlist: wishes
+  activeWishlist: wishes,
+  selectedWish
 })
 
 export default aarzooReducers;

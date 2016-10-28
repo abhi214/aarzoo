@@ -51,18 +51,18 @@ const WishlistsContainer = React.createClass({
   showDialog(showDialog) {
     this.setState({showCreateDialog: showDialog});
   },
-  renderWishlistPaper(wishlist) {
+  renderWishlistPaper(wishlist, index) {
     const { id, name } = wishlist;
     return (
-      <Paper style={paperStyle} onClick={() => this.onWishlistSelect(id)} zDepth={4}>
+      <Paper key={`wishlist_${index}`} style={paperStyle} onClick={() => this.onWishlistSelect(id)} zDepth={4}>
         <h1>{name}</h1>
       </Paper>
     );
   },
   render() {
     const { dispatch, wishlists } = this.props;
-    const wishlistPapers = wishlists.map((wishlist) => {
-      return this.renderWishlistPaper(wishlist);
+    const wishlistPapers = wishlists.map((wishlist, index) => {
+      return this.renderWishlistPaper(wishlist, index);
     });
     return (
       <div style={wishlistsContainerStyle}>

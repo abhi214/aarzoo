@@ -12,7 +12,8 @@ const WishCreator = React.createClass({
     showDialogCallback: React.PropTypes.func,
     wishlist_id: React.PropTypes.number,
     currNumWishes: React.PropTypes.number,
-    existingWish: React.PropTypes.object
+    existingWish: React.PropTypes.object,
+    existingWishCallback: React.PropTypes.func
   },
   getInitialState() {
     const { currNumWishes, wishlist_id } = this.props;
@@ -26,31 +27,36 @@ const WishCreator = React.createClass({
       wishlist_id: wishlist_id
     }
   },
-  componentWillReceiveProps(nextProps) {
+  /*componentWillReceiveProps(nextProps) {
     const { existingWish } = nextProps;
     if(!this.props.existingWish && existingWish) {
       this.setState(existingWish);
     }
-  },
+  },*/
   onHideCreateDialog() {
     this.props.showDialogCallback(false);
   },
   upsertNewWish() {
-    const { showDialogCallback, dispatch } = this.props;
-    if(!this.state.id) {
-      dispatch(createWish(Object.assign({}, this.state)));
+    const { showDialogCallback, dispatch, existingWish } = this.props;
+    if(existingWish) {
+      dispatch(updateWish(existingWish));
     } else {
-      dispatch(updateWish(Object.assign({}, this.state)));
+      dispatch(createWish(this.state));
     }
     showDialogCallback(false);
   },
   onTextChange(event, property) {
-    let newState = Object.assign({}, this.state);
-    newState[property] = event.target.value;
-    this.setState(newState);
+    const { existingWish, existingWishCallback } = this.props;
+    if(existingWish) {
+      existingWishCallback(property, event.target.value);
+    } else {
+      let newState = Object.assign({}, this.state);
+      newState[property] = event.target.value;
+      this.setState(newState);
+    }
   },
   render() {
-    const { showDialog, showDialogCallback } = this.props;
+    const { showDialog, showDialogCallback, existingWish } = this.props;
     const dialogActions = [
       <FlatButton
         label="Cancel"
@@ -72,10 +78,26 @@ const WishCreator = React.createClass({
         open={showDialog}
         onRequestClose={this.onHideCreateDialog}>
         <div>
-          <TextField hintText="Item" onBlur={(event) => this.onTextChange(event, 'item')}/><br/>
-          <TextField hintText="Description" onBlur={(event) => this.onTextChange(event, 'description')}/><br/>
-          <TextField hintText="Link" onBlur={(event) => this.onTextChange(event, 'link')}/><br/>
-          <TextField hintText="Price" onBlur={(event) => this.onTextChange(event, 'price')}/><br/>
+          <TextField
+            hintText="Item"
+            value={existingWish ? existingWish.item : this.state.item}
+            onChange={(event) => this.onTextChange(event, 'item')}/>
+          <br/>
+          <TextField
+            hintText="Description"
+            value={existingWish ? existingWish.description : this.state.description}
+            onChange={(event) => this.onTextChange(event, 'description')}/>
+          <br/>
+          <TextField
+            hintText="Link"
+            value={existingWish ? existingWish.link : this.state.link}
+            onChange={(event) => this.onTextChange(event, 'link')}/>
+          <br/>
+          <TextField
+            hintText="Price"
+            value={existingWish ? existingWish.price : this.state.price}
+            onChange={(event) => this.onTextChange(event, 'price')}/>
+          <br/>
         </div>
       </Dialog>
     );
