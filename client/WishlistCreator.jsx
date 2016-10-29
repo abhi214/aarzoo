@@ -3,7 +3,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 
-import { createWishlist } from './actions';
+import { wishlistCreated } from './actions';
 
 const WishlistCreator = React.createClass({
   propTypes: {
@@ -21,7 +21,7 @@ const WishlistCreator = React.createClass({
   },
   createNewWishlist() {
     const { showDialogCallback, dispatch } = this.props;
-    dispatch(createWishlist(this.state.wishlistName));
+    dispatch(wishlistCreated(this.state.wishlistName));
     showDialogCallback(false);
   },
   onTextChange(event) {

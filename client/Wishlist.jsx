@@ -14,7 +14,7 @@ import ActionGrade from 'material-ui/svg-icons/action/grade';
 import {pink200} from 'material-ui/styles/colors';
 
 import WishCreator from './WishCreator';
-import { unselectWishlist, wishDeleted } from './actions';
+import { wishlistUnselected, wishDeleted } from './actions';
 
 const appBarStyle = {
   title: {
@@ -40,7 +40,7 @@ const Wishlist = React.createClass({
     }
   },
   onReturnToWishlists() {
-    this.props.dispatch(unselectWishlist());
+    this.props.dispatch(wishlistUnselected());
   },
   onOpenCreateWishDialog() {
     this.showDialog(true);

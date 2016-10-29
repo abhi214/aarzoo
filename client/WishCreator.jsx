@@ -3,7 +3,14 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 
-import { createWish, updateWish } from './actions';
+import { wishCreated, wishUpdated } from './actions';
+
+const EMPTY_WISH = {
+  item: '',
+  description: '',
+  price: '',
+  link: ''
+};
 
 const WishCreator = React.createClass({
   propTypes: {
@@ -17,31 +24,28 @@ const WishCreator = React.createClass({
   },
   getInitialState() {
     const { currNumWishes, wishlist_id } = this.props;
-    return {
-      id: undefined,
-      item: '',
-      description: '',
-      price: '',
-      link: '',
+    return Object.assign({}, EMPTY_WISH, {
       priority: currNumWishes + 1,
       wishlist_id: wishlist_id
-    }
+    });
   },
-  /*componentWillReceiveProps(nextProps) {
-    const { existingWish } = nextProps;
-    if(!this.props.existingWish && existingWish) {
-      this.setState(existingWish);
-    }
-  },*/
   onHideCreateDialog() {
     this.props.showDialogCallback(false);
+    this.setState(Object.assign({}, EMPTY_WISH, {
+      priority: currNumWishes + 1,
+      wishlist_id: wishlist_id
+    }));
   },
   upsertNewWish() {
-    const { showDialogCallback, dispatch, existingWish } = this.props;
+    const { showDialogCallback, dispatch, existingWish, currNumWishes, wishlist_id } = this.props;
     if(existingWish) {
-      dispatch(updateWish(existingWish));
+      dispatch(wishUpdated(existingWish));
     } else {
-      dispatch(createWish(this.state));
+      dispatch(wishCreated(this.state));
+      this.setState(Object.assign({}, EMPTY_WISH, {
+        priority: currNumWishes + 2,
+        wishlist_id: wishlist_id
+      }));
     }
     showDialogCallback(false);
   },

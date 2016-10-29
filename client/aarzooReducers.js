@@ -1,13 +1,13 @@
 import { combineReducers } from 'redux';
-import { RECEIVED_WISHLISTS, WISHLIST_SELECTED, UNSELECT_WISHLIST,
-  CREATE_WISHLIST, WISHLIST_DELETED, CREATE_WISH, UPDATE_WISH, WISH_DELETED,
-  WISH_SELECTED_TO_MODIFY, MODIFY_SELECTED_WISH } from './actions';
+import { RECEIVED_WISHLISTS, WISHLIST_CREATED, WISHLIST_DELETED,
+  WISHLIST_SELECTED, WISHLIST_UNSELECTED, WISH_CREATED, WISH_UPDATED,
+  WISH_DELETED, WISH_SELECTED_TO_MODIFY, MODIFY_SELECTED_WISH } from './actions';
 
 function wishlists(state = [], action) {
   switch (action.type) {
     case RECEIVED_WISHLISTS:
       return action.payload;
-    case CREATE_WISHLIST:
+    case WISHLIST_CREATED:
       return state.concat(action.payload);
     case WISHLIST_DELETED:
       const index = state.indexOf(action.wishlist);
@@ -22,11 +22,11 @@ function wishes(state = false, action) {
   switch (action.type) {
     case WISHLIST_SELECTED:
       return action.payload;
-    case UNSELECT_WISHLIST:
+    case WISHLIST_UNSELECTED:
       return false;
-    case CREATE_WISH:
+    case WISH_CREATED:
       return Object.assign({}, state, { items: state.items.concat(action.payload) });
-    case UPDATE_WISH:
+    case WISH_UPDATED:
       if(!state) {
         return { items: [action.payload] };
       } else {

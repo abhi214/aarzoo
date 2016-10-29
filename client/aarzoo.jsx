@@ -42,7 +42,3 @@ function fetchWishlists() {
 
 renderApp();
 fetchWishlists();
-
-//create store
-//register reducers and middleware and however complex you wanna get
-//ReactDOM.render(<YourTopLevelComponent>, mountPoint);

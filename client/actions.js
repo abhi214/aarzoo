@@ -21,9 +21,9 @@ export function wishlistSelected(wishlistId) {
     });
 }
 
-export const UNSELECT_WISHLIST = 'UNSELECT_WISHLIST';
-export function unselectWishlist() {
-  return { type: UNSELECT_WISHLIST };
+export const WISHLIST_UNSELECTED = 'WISHLIST_UNSELECTED';
+export function wishlistUnselected() {
+  return { type: WISHLIST_UNSELECTED };
 }
 
 export const WISHLIST_DELETED = 'WISHLIST_DELETED';
@@ -40,14 +40,14 @@ export function wishlistDeleted(wishlist) {
     });
 }
 
-export const CREATE_WISHLIST = 'CREATE_WISHLIST';
-export function createWishlist(wishlistName) {
+export const WISHLIST_CREATED = 'WISHLIST_CREATED';
+export function wishlistCreated(wishlistName) {
   return fetch(`http://localhost:3000/createWishlist/${wishlistName}`,
     { method: 'POST' }
   ).then(response => response.json())
     .then(json => {
       return {
-        type: CREATE_WISHLIST,
+        type: WISHLIST_CREATED,
         payload: {
           id: json,
           name: wishlistName
@@ -58,8 +58,8 @@ export function createWishlist(wishlistName) {
 
 ////////////////* WISH ACTIONS *////////////////////
 
-export const CREATE_WISH = 'CREATE_WISH';
-export function createWish(wish) {
+export const WISH_CREATED = 'WISH_CREATED';
+export function wishCreated(wish) {
   const reqBodyData = JSON.stringify(wish);
   return fetch(`http://localhost:3000/addWishlistItem`,
     {
@@ -73,14 +73,14 @@ export function createWish(wish) {
   ).then(response => response.json())
     .then(json => {
       return {
-        type: CREATE_WISH,
+        type: WISH_CREATED,
         payload: Object.assign({}, wish, { id: json })
       }
     });
 }
 
-export const UPDATE_WISH = 'UPDATE_WISH';
-export function updateWish(wish) {
+export const WISH_UPDATED = 'WISH_UPDATED';
+export function wishUpdated(wish) {
   const reqBodyData = JSON.stringify(wish);
   return fetch(`http://localhost:3000/updateWishlistItem`,
     {
@@ -94,7 +94,7 @@ export function updateWish(wish) {
   ).then(response => response.json())
     .then(json => {
       return {
-        type: UPDATE_WISH,
+        type: WISH_UPDATED,
         payload: Object.assign({}, wish)
       }
     });
