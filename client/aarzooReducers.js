@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { RECEIVED_WISHLISTS, WISHLIST_CREATED, WISHLIST_DELETED,
   WISHLIST_SELECTED, WISHLIST_UNSELECTED, WISH_CREATED, WISH_UPDATED,
-  WISH_DELETED, WISH_SELECTED_TO_MODIFY, MODIFY_SELECTED_WISH } from './actions';
+  WISH_DELETED, WISH_SELECTED_TO_EDIT, EDIT_SELECTED_WISH } from './actions';
 
 function wishlists(state = [], action) {
   switch (action.type) {
@@ -50,11 +50,11 @@ function wishes(state = false, action) {
   return state;
 }
 
-function selectedWish(state = false, action) {
+function selectedWish(state = {}, action) {
   switch(action.type) {
-    case WISH_SELECTED_TO_MODIFY:
+    case WISH_SELECTED_TO_EDIT:
       return action.payload;
-    case MODIFY_SELECTED_WISH:
+    case EDIT_SELECTED_WISH:
       let newState = Object.assign({}, state);
       newState[action.property] = action.value;
       return newState;

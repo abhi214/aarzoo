@@ -114,18 +114,18 @@ export function wishDeleted(wish) {
     });
 }
 
-export const WISH_SELECTED_TO_MODIFY = 'WISH_SELECTED_TO_MODIFY';
-export function wishSelectedToModify(wish) {
+export const WISH_SELECTED_TO_EDIT = 'WISH_SELECTED_TO_EDIT';
+export function wishSelectedToEdit(wish) {
     return {
-      type: WISH_SELECTED_TO_MODIFY,
+      type: WISH_SELECTED_TO_EDIT,
       payload: wish
     }
 }
 
-export const MODIFY_SELECTED_WISH = 'WISH_SELECTED_TO_MODIFY';
-export function modifySelectedWish(property, value) {
+export const EDIT_SELECTED_WISH = 'EDIT_SELECTED_WISH';
+export function editSelectedWish(property, value) {
     return {
-      type: MODIFY_SELECTED_WISH,
+      type: EDIT_SELECTED_WISH,
       property: property,
       value: value
     }

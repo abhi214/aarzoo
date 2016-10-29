@@ -14,50 +14,55 @@ import ActionGrade from 'material-ui/svg-icons/action/grade';
 import {pink200} from 'material-ui/styles/colors';
 
 import WishCreator from './WishCreator';
-import { wishlistUnselected, wishDeleted } from './actions';
+import { wishlistUnselected, wishDeleted, wishSelectedToEdit } from './actions';
 
-const appBarStyle = {
-  title: {
-    cursor: 'pointer'
-  },
-};
-const addWishlistContainerStyle = {
-  textAlign: 'right'
-}
-const addWishlistStyle = {
-  marginTop: 20
-};
+const appBarStyle = { title: { cursor: 'pointer' } };
+const addWishlistContainerStyle = { textAlign: 'right' };
+const addWishlistStyle = { marginTop: 20 };
 
 const Wishlist = React.createClass({
   propTypes: {
     dispatch: React.PropTypes.func,
-    wishlist: React.PropTypes.object
+    wishlist: React.PropTypes.object,
+    selectedWish: React.PropTypes.object
   },
   getInitialState() {
     return {
-      showCreateWishDialog: false,
-      selectedWish: undefined
+      showWishDialog: false
     }
   },
   onReturnToWishlists() {
     this.props.dispatch(wishlistUnselected());
   },
-  onOpenCreateWishDialog() {
-    this.showDialog(true);
+  onOpenWishDialog_NewWish() {
+    this.toggleWishDialogAndResetSelectedWish(true);
   },
-  onOpenEditWishDialog(event, wish) {
-    event.stopPropagation();
-    this.setState({
-      showCreateWishDialog: true,
-      selectedWish: Object.assign({}, wish)
+  onHideWishDialog() {
+    this.toggleWishDialogAndResetSelectedWish(false);
+  },
+  toggleWishDialogAndResetSelectedWish(showDialog) {
+    const { id, items } = this.props.wishlist;
+    this.showDialog(showDialog, {
+      item: '',
+      description: '',
+      link: '',
+      price: '',
+      priority: items.length + 1,
+      wishlist_id: id
     });
+  },
+  onOpenWishDialog_ExistingWish(event, wish) {
+    event.stopPropagation();
+    this.showDialog(true, Object.assign({}, wish));
+  },
+  showDialog(showDialog, selectedWish) {
+    const { dispatch } = this.props;
+    this.props.dispatch(wishSelectedToEdit(selectedWish));
+    this.setState({showWishDialog: showDialog});
   },
   onDeleteWish(event, wish) {
     event.stopPropagation();
     this.props.dispatch(wishDeleted(wish));
-  },
-  showDialog(showDialog) {
-    this.setState({showCreateWishDialog: showDialog, selectedWish: undefined});
   },
   modifySelectedWish(property, value) {
     let newState = Object.assign({}, this.state);
@@ -80,7 +85,7 @@ const Wishlist = React.createClass({
         onClick={()=>this.safeOpen(link)}
         rightIconButton={
           <div>
-            <IconButton onClick={(event) => this.onOpenEditWishDialog(event, wish)}>
+            <IconButton onClick={(event) => this.onOpenWishDialog_ExistingWish(event, wish)}>
               <Create />
             </IconButton>
             <IconButton onClick={(event) => this.onDeleteWish(event, wish)}>
@@ -95,7 +100,7 @@ const Wishlist = React.createClass({
     );
   },
   render() {
-    const { wishlist, dispatch } = this.props;
+    const { wishlist, dispatch, selectedWish } = this.props;
     const { id, name, items } = wishlist;
     const wishes = items.map((item, index) => {
       return this.renderWish(item, index);
@@ -115,19 +120,16 @@ const Wishlist = React.createClass({
         </div>
         <div style={addWishlistContainerStyle}>
           <FloatingActionButton
-            onClick={this.onOpenCreateWishDialog}
+            onClick={this.onOpenWishDialog_NewWish}
             style={addWishlistStyle}>
             <ContentAdd />
           </FloatingActionButton>
         </div>
         <WishCreator
           dispatch={dispatch}
-          showDialog={this.state.showCreateWishDialog}
-          showDialogCallback={this.showDialog}
-          wishlist_id={id}
-          currNumWishes={items.length}
-          existingWish={this.state.selectedWish}
-          existingWishCallback={this.modifySelectedWish} />
+          showDialog={this.state.showWishDialog}
+          hideDialog={this.onHideWishDialog}
+          selectedWish={selectedWish} />
       </div>
     );
   }
