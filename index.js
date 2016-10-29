@@ -89,8 +89,12 @@ app.post('/destroyWishlist/:wishlistId', function (req, res) {
     if (err) {
       throw err;
     }
-
-    res.json(result.insertId);
+  });
+  connection.query('DELETE FROM wishlist_items WHERE wishlist_id = ?', [wishlistId], function(err, result) {
+    if (err) {
+      throw err;
+    }
+    res.json(result);
   });
   endConnectionToDB();
 });

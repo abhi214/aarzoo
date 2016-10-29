@@ -9,12 +9,12 @@ import FlatButton from 'material-ui/FlatButton';
 //import MobileTearSheet from '../../../MobileTearSheet';
 import {List, ListItem} from 'material-ui/List';
 import Create from 'material-ui/svg-icons/content/create';
-import Avatar from 'material-ui/Avatar';
+import Delete from 'material-ui/svg-icons/action/delete';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
 import {pink200} from 'material-ui/styles/colors';
 
 import WishCreator from './WishCreator';
-import { unselectWishlist } from './actions';
+import { unselectWishlist, wishDeleted } from './actions';
 
 const appBarStyle = {
   title: {
@@ -52,6 +52,10 @@ const Wishlist = React.createClass({
       selectedWish: Object.assign({}, wish)
     });
   },
+  onDeleteWish(event, wish) {
+    event.stopPropagation();
+    this.props.dispatch(wishDeleted(wish));
+  },
   showDialog(showDialog) {
     this.setState({showCreateWishDialog: showDialog, selectedWish: undefined});
   },
@@ -75,9 +79,14 @@ const Wishlist = React.createClass({
         leftIcon={<ActionGrade color={pink200} />}
         onClick={()=>this.safeOpen(link)}
         rightIconButton={
-          <IconButton onClick={(event) => this.onOpenEditWishDialog(event, wish)}>
-            <Create />
-          </IconButton>
+          <div>
+            <IconButton onClick={(event) => this.onOpenEditWishDialog(event, wish)}>
+              <Create />
+            </IconButton>
+            <IconButton onClick={(event) => this.onDeleteWish(event, wish)}>
+              <Delete />
+            </IconButton>
+          </div>
         }
         primaryText={item}
         secondaryText={`Price: \$${price} | ${description}`}

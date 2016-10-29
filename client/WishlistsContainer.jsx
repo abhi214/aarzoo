@@ -7,9 +7,10 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import Delete from 'material-ui/svg-icons/action/delete';
 import WishlistCreator from './WishlistCreator';
 
-import { wishlistSelected } from './actions';
+import { wishlistSelected, wishlistDeleted } from './actions';
 
 const paperStyle = {
   height: 150,
@@ -19,18 +20,11 @@ const paperStyle = {
   verticalAlign: 'top',
   display: 'inline-block',
 };
-
-const appBarStyle = {
-  textAlign: 'start'
-};
-
-const wishlistsContainerStyle = {
-  textAlign: 'center'
-}
-
-const createWishlistStyle = {
-  marginTop: 20
-};
+const appBarStyle = { textAlign: 'start' };
+const wishlistsContainerStyle = { textAlign: 'center' };
+const createWishlistStyle = { marginTop: 20 };
+const deleteButtonStyle = { height: 33, width: 33 };
+const deleteIconStyle = { height: 33, width: 33, color: '#878c84', fill: '#878c84' };
 
 const WishlistsContainer = React.createClass({
   propTypes: {
@@ -48,6 +42,10 @@ const WishlistsContainer = React.createClass({
   onOpenCreateDialog() {
     this.showDialog(true);
   },
+  onDeleteWishlist(event, wishlist) {
+    event.stopPropagation();
+    this.props.dispatch(wishlistDeleted(wishlist));
+  },
   showDialog(showDialog) {
     this.setState({showCreateDialog: showDialog});
   },
@@ -56,6 +54,11 @@ const WishlistsContainer = React.createClass({
     return (
       <Paper key={`wishlist_${index}`} style={paperStyle} onClick={() => this.onWishlistSelect(id)} zDepth={4}>
         <h1>{name}</h1>
+        <FlatButton
+          style={deleteButtonStyle}
+          onClick={(event) => this.onDeleteWishlist(event, wishlist)}
+          icon={<Delete style={deleteIconStyle} />}
+        />
       </Paper>
     );
   },
