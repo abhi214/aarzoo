@@ -28,45 +28,24 @@ const WishCreator = React.createClass({
   render() {
     const { showDialog, hideDialog, selectedWish } = this.props;
     const dialogActions = [
-      <FlatButton
-        label="Cancel"
-        primary={true}
-        onClick={hideDialog}
-      />,
-      <FlatButton
-        label="Create"
-        primary={true}
-        keyboardFocused={true}
-        onClick={this.upsertNewWish}
-      />
+      <FlatButton label="Cancel" primary={true} onClick={hideDialog} />,
+      <FlatButton label="Create" primary={true} onClick={this.upsertNewWish} />
     ];
     return (
-      <Dialog
-        title="Add a wish"
-        actions={dialogActions}
-        modal={false}
-        open={showDialog}
-        onRequestClose={hideDialog}>
+      <Dialog title="Add a wish" actions={dialogActions} modal={false}
+        open={showDialog} onRequestClose={hideDialog}>
         <div>
-          <TextField
-            hintText="Item"
-            value={selectedWish.item}
-            onBlur={(event) => this.onTextChange(event, 'item')}/>
+          <TextField hintText="Item" value={selectedWish.item}
+            onChange={(event) => this.onTextChange(event, 'item')}/>
           <br/>
-          <TextField
-            hintText="Description"
-            value={selectedWish.description}
-            onBlur={(event) => this.onTextChange(event, 'description')}/>
+          <TextField hintText="Description" value={selectedWish.description}
+            onChange={(event) => this.onTextChange(event, 'description')}/>
           <br/>
-          <TextField
-            hintText="Link"
-            value={selectedWish.link}
-            onBlur={(event) => this.onTextChange(event, 'link')}/>
+          <TextField hintText="Link" value={selectedWish.link}
+            onChange={(event) => this.onTextChange(event, 'link')}/>
           <br/>
-          <TextField
-            hintText="Price"
-            value={selectedWish.price}
-            onBlur={(event) => this.onTextChange(event, 'price')}/>
+          <TextField hintText="Price" value={selectedWish.price}
+            onChange={(event) => this.onTextChange(event, 'price')}/>
           <br/>
         </div>
       </Dialog>

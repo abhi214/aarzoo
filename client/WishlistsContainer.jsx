@@ -5,7 +5,6 @@ import IconButton from 'material-ui/IconButton';
 import CardGiftcard from 'material-ui/svg-icons/action/card-giftcard';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Delete from 'material-ui/svg-icons/action/delete';
 import WishlistCreator from './WishlistCreator';

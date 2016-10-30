@@ -1,3 +1,40 @@
 body {
   background-color: white;
 }
+
+.wishlistPaper {
+  height: 150px;
+  width: 250px;
+  margin: 20px;
+  text-align: center;
+  vertical-align: top;
+  display: inline-block;
+};
+
+.wishlistsContainerAppBar {
+  text-align: start;
+}
+
+.wishlistsContainer {
+  text-align: center;
+}
+
+.createButtonContainer {
+  text-align: right;
+}
+
+.createButton {
+  margin-top: 20px;
+}
+
+.deleteButton {
+  height: 33px;
+  width: 33px;
+}
+
+.deleteIcon {
+  height: 33px;
+  width: 33px;
+  color: #878c84;
+  fill: #878c84;
+}

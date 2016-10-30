@@ -1,6 +1,5 @@
 import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import ViewWishlists from './ViewWishlists';
 import Wishlist from './Wishlist';
 import WishlistsContainer from './WishlistsContainer';
 
