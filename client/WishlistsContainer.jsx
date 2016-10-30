@@ -6,10 +6,11 @@ import CardGiftcard from 'material-ui/svg-icons/action/card-giftcard';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import FlatButton from 'material-ui/FlatButton';
+import Create from 'material-ui/svg-icons/content/create';
 import Delete from 'material-ui/svg-icons/action/delete';
 import WishlistCreator from './WishlistCreator';
 
-import { wishlistSelected, wishlistDeleted } from './actions';
+import { wishlistSelected, wishlistDeleted, wishlistSelectedToEdit } from './actions';
 
 const paperStyle = {
   height: 150,
@@ -22,47 +23,70 @@ const paperStyle = {
 const appBarStyle = { textAlign: 'start' };
 const wishlistsContainerStyle = { textAlign: 'center' };
 const createWishlistStyle = { marginTop: 20 };
-const deleteButtonStyle = { height: 33, width: 33 };
-const deleteIconStyle = { height: 33, width: 33, color: '#878c84', fill: '#878c84' };
+const paperButtonStyle = { height: 33, width: 33, minWidth: 0 };
+const iconStyle = { height: 33, width: 33, color: '#878c84', fill: '#878c84' };
 
 const WishlistsContainer = React.createClass({
   propTypes: {
     dispatch: React.PropTypes.func,
-    wishlists: React.PropTypes.array
+    wishlists: React.PropTypes.array,
+    selectedWishlist: React.PropTypes.object
   },
   getInitialState() {
     return {
-      showCreateDialog: false
+      showWishlistDialog: false
     }
+  },
+  onOpenWishDialog_NewWishlist() {
+    this.toggleWishDialogAndResetSelectedWishlist(true);
+  },
+  onHideWishDialog() {
+    this.toggleWishDialogAndResetSelectedWishlist(false);
+  },
+  toggleWishDialogAndResetSelectedWishlist(showDialog) {
+    this.showDialog(showDialog, {
+      id: undefined,
+      name: ''
+    });
+  },
+  onOpenWishDialog_ExistingWishlist(event, wishlist) {
+    event.stopPropagation();
+    this.showDialog(true, Object.assign({}, wishlist));
+  },
+  showDialog(showDialog, selectedWishlist) {
+    const { dispatch } = this.props;
+    this.props.dispatch(wishlistSelectedToEdit(selectedWishlist));
+    this.setState({showWishlistDialog: showDialog});
   },
   onWishlistSelect(wishlistId) {
     this.props.dispatch(wishlistSelected(wishlistId));
   },
-  onOpenCreateDialog() {
-    this.showDialog(true);
-  },
   onDeleteWishlist(event, wishlist) {
     event.stopPropagation();
     this.props.dispatch(wishlistDeleted(wishlist));
-  },
-  showDialog(showDialog) {
-    this.setState({showCreateDialog: showDialog});
   },
   renderWishlistPaper(wishlist, index) {
     const { id, name } = wishlist;
     return (
       <Paper key={`wishlist_${index}`} style={paperStyle} onClick={() => this.onWishlistSelect(id)} zDepth={4}>
         <h1>{name}</h1>
+        <div>
         <FlatButton
-          style={deleteButtonStyle}
-          onClick={(event) => this.onDeleteWishlist(event, wishlist)}
-          icon={<Delete style={deleteIconStyle} />}
+          style={paperButtonStyle}
+          onClick={(event) => this.onOpenWishDialog_ExistingWishlist(event, wishlist)}
+          icon={<Create style={iconStyle} />}
         />
+        <FlatButton
+          style={paperButtonStyle}
+          onClick={(event) => this.onDeleteWishlist(event, wishlist)}
+          icon={<Delete style={iconStyle} />}
+        />
+        </div>
       </Paper>
     );
   },
   render() {
-    const { dispatch, wishlists } = this.props;
+    const { dispatch, wishlists, selectedWishlist } = this.props;
     const wishlistPapers = wishlists.map((wishlist, index) => {
       return this.renderWishlistPaper(wishlist, index);
     });
@@ -75,14 +99,15 @@ const WishlistsContainer = React.createClass({
         />
         <div style={wishlistsContainerStyle}>{wishlistPapers}</div>
         <FloatingActionButton
-          onClick={this.onOpenCreateDialog}
+          onClick={this.onOpenWishDialog_NewWishlist}
           style={createWishlistStyle}>
           <ContentAdd />
         </FloatingActionButton>
         <WishlistCreator
           dispatch={dispatch}
-          showDialog={this.state.showCreateDialog}
-          showDialogCallback={this.showDialog} />
+          showDialog={this.state.showWishlistDialog}
+          hideDialog={this.onHideWishDialog}
+          selectedWishlist={selectedWishlist} />
       </div>
     );
   }

@@ -3,55 +3,41 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 
-import { wishlistCreated } from './actions';
+import { wishlistCreated, wishlistUpdated, editSelectedWishlist } from './actions';
 
 const WishlistCreator = React.createClass({
   propTypes: {
     dispatch: React.PropTypes.func,
     showDialog: React.PropTypes.bool,
-    showDialogCallback: React.PropTypes.func
+    hideDialog: React.PropTypes.func,
+    selectedWishlist: React.PropTypes.object
   },
-  getInitialState() {
-    return {
-      wishlistName: ''
+  upsertNewWishlist() {
+    const { dispatch, selectedWishlist, hideDialog } = this.props;
+    if(selectedWishlist.id) {
+      dispatch(wishlistUpdated(selectedWishlist));
+    } else {
+      dispatch(wishlistCreated(selectedWishlist));
     }
+    hideDialog();
   },
-  onHideCreateDialog() {
-    this.props.showDialogCallback(false);
-  },
-  createNewWishlist() {
-    const { showDialogCallback, dispatch } = this.props;
-    dispatch(wishlistCreated(this.state.wishlistName));
-    showDialogCallback(false);
-  },
-  onTextChange(event) {
-    this.setState({wishlistName: event.target.value});
+  onTextChange(event, property) {
+    const action = editSelectedWishlist(property, event.target.value);
+    this.props.dispatch(action);
   },
   render() {
-    const { showDialog, showDialogCallback } = this.props;
+    const { showDialog, hideDialog, selectedWishlist } = this.props;
     const dialogActions = [
-      <FlatButton
-        label="Cancel"
-        primary={true}
-        onClick={this.onHideCreateDialog}
-      />,
-      <FlatButton
-        label="Create"
-        primary={true}
-        keyboardFocused={true}
-        onClick={this.createNewWishlist}
-      />
+      <FlatButton label="Cancel" primary={true} onClick={hideDialog} />,
+      <FlatButton label="Create" primary={true} onClick={this.upsertNewWishlist} />
     ];
     return (
-      <Dialog
-        title="Create New Wishlist"
-        actions={dialogActions}
-        modal={false}
-        open={showDialog}
-        onRequestClose={this.onHideCreateDialog}>
+      <Dialog title="Create New Wishlist" actions={dialogActions} modal={false}
+        open={showDialog} onRequestClose={hideDialog}>
         <TextField
           hintText="Name Your New Wishlist"
-          onBlur={this.onTextChange}/>
+          value={selectedWishlist.name}
+          onChange={(event) => this.onTextChange(event, 'name')} />
       </Dialog>
     );
   }

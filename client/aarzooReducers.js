@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux';
-import { RECEIVED_WISHLISTS, WISHLIST_CREATED, WISHLIST_DELETED,
-  WISHLIST_SELECTED, WISHLIST_UNSELECTED, WISH_CREATED, WISH_UPDATED,
-  WISH_DELETED, WISH_SELECTED_TO_EDIT, EDIT_SELECTED_WISH } from './actions';
+import { RECEIVED_WISHLISTS, WISHLIST_CREATED, WISHLIST_UPDATED, WISHLIST_DELETED,
+  WISHLIST_SELECTED, WISHLIST_UNSELECTED, WISHLIST_SELECTED_TO_EDIT,
+  EDIT_SELECTED_WISHLIST, WISH_CREATED, WISH_UPDATED, WISH_DELETED,
+  WISH_SELECTED_TO_EDIT, EDIT_SELECTED_WISH } from './actions';
 
 function wishlists(state = [], action) {
   switch (action.type) {
@@ -9,6 +10,15 @@ function wishlists(state = [], action) {
       return action.payload;
     case WISHLIST_CREATED:
       return state.concat(action.payload);
+    case WISHLIST_UPDATED:
+      if(!state) {
+        return [action.payload];
+      } else {
+        let updatedItems = state.slice(0);
+        const index = updatedItems.map((item) => item.id).indexOf(action.payload.id);
+        updatedItems[index] = action.payload;
+        return updatedItems;
+      }
     case WISHLIST_DELETED:
       const index = state.indexOf(action.wishlist);
       if(index >= 0) {
@@ -62,10 +72,23 @@ function selectedWish(state = {}, action) {
   return state;
 }
 
+function selectedWishlist(state = {}, action) {
+  switch(action.type) {
+    case WISHLIST_SELECTED_TO_EDIT:
+      return action.payload;
+    case EDIT_SELECTED_WISHLIST:
+      let newState = Object.assign({}, state);
+      newState[action.property] = action.value;
+      return newState;
+  }
+  return state;
+}
+
 const aarzooReducers = combineReducers({
   wishlists,
   activeWishlist: wishes,
-  selectedWish
+  selectedWish,
+  selectedWishlist
 })
 
 export default aarzooReducers;

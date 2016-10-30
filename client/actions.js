@@ -41,8 +41,9 @@ export function wishlistDeleted(wishlist) {
 }
 
 export const WISHLIST_CREATED = 'WISHLIST_CREATED';
-export function wishlistCreated(wishlistName) {
-  return fetch(`http://localhost:3000/createWishlist/${wishlistName}`,
+export function wishlistCreated(wishlist) {
+  const { name } = wishlist;
+  return fetch(`http://localhost:3000/createWishlist/${name}`,
     { method: 'POST' }
   ).then(response => response.json())
     .then(json => {
@@ -50,10 +51,48 @@ export function wishlistCreated(wishlistName) {
         type: WISHLIST_CREATED,
         payload: {
           id: json,
-          name: wishlistName
+          name: name
         }
       }
     });
+}
+
+export const WISHLIST_UPDATED = 'WISHLIST_UPDATED';
+export function wishlistUpdated(wishlist) {
+  const reqBodyData = JSON.stringify(wishlist);
+  return fetch(`http://localhost:3000/updateWishlistName`,
+    {
+      method: 'POST',
+      body: reqBodyData,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }
+  ).then(response => response.json())
+    .then(json => {
+      return {
+        type: WISHLIST_UPDATED,
+        payload: Object.assign({}, wishlist)
+      }
+    });
+}
+
+export const WISHLIST_SELECTED_TO_EDIT = 'WISHLIST_SELECTED_TO_EDIT';
+export function wishlistSelectedToEdit(wishlist) {
+    return {
+      type: WISHLIST_SELECTED_TO_EDIT,
+      payload: wishlist
+    }
+}
+
+export const EDIT_SELECTED_WISHLIST = 'EDIT_SELECTED_WISHLIST';
+export function editSelectedWishlist(property, value) {
+    return {
+      type: EDIT_SELECTED_WISHLIST,
+      property: property,
+      value: value
+    }
 }
 
 ////////////////* WISH ACTIONS *////////////////////
