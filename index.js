@@ -76,7 +76,6 @@ app.post('/updateWishlistName', function (req, res) {
     if (err) {
       res.status(400).send('Failed to update the wishlist [' + id + ']');
     }
-
     res.json(result.changedRows);
   });
   endConnectionToDB();
@@ -91,7 +90,7 @@ app.post('/destroyWishlist/:wishlistId', function (req, res) {
   });
   connection.query('DELETE FROM wishlist_items WHERE wishlist_id = ?', [wishlistId], function(err, result) {
     if (err) {
-      throw err;
+      res.status(400).send('Failed to delete wishes of the wishlist [' + wishlistId + ']');;
     }
     res.json(result);
   });
@@ -146,12 +145,11 @@ app.post('/removeWishlistItem/:wishlistItemId', function (req, res) {
     if (err) {
       res.status(400).send('Failed to delete the wish [' + wishlistItemId + ']');
     }
-
     res.json(result.affectedRows);
   });
   endConnectionToDB();
 });
 
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+  console.log('Aarzoo listening on port 3000!');
 });

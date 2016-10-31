@@ -23,8 +23,7 @@
     "mysql": "^2.11.1",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
-    "redux": "^3.6.0",
-    "simple-ajax": "^2.6.0"
+    "redux": "^3.6.0"
   },
   "devDependencies": {
     "babel-core": "^6.17.0",

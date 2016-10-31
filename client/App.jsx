@@ -14,8 +14,10 @@ const App = React.createClass({
     const { store } = this.props;
     const { wishlists, activeWishlist, selectedWish, selectedWishlist} = store.getState();
     const view = activeWishlist ?
-      <Wishlist dispatch={store.dispatch} wishlist={activeWishlist} selectedWish={selectedWish} /> :
-      <WishlistsContainer dispatch={store.dispatch} wishlists={wishlists} selectedWishlist={selectedWishlist} />;
+      <Wishlist dispatch={store.dispatch} wishlist={activeWishlist}
+        selectedWish={selectedWish} /> :
+      <WishlistsContainer dispatch={store.dispatch} wishlists={wishlists}
+        selectedWishlist={selectedWishlist} />;
 
     return (
       <MuiThemeProvider>{view}</MuiThemeProvider>
