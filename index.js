@@ -42,7 +42,7 @@ app.get('/wishlist/:wishlistId', function (req, res, next) {
   const { wishlistId } = req.params;
   connection.query('SELECT * FROM wishlists WHERE id = ?', [wishlistId], function(err, rows, fields) {
     if (err) {
-      res.status(404).send('Wishlist not found');
+      res.status(404).send('Wishlist [' + wishlistId + '] not found');
     }
     req.params.wishlistName = rows[0].name;
     next();
@@ -51,7 +51,7 @@ app.get('/wishlist/:wishlistId', function (req, res, next) {
   const { wishlistId, wishlistName } = req.params;
   connection.query('SELECT * FROM wishlist_items WHERE wishlist_id = ?', [wishlistId], function(err, rows, fields) {
     if (err) {
-      res.status(404).send('Wishlist not found');
+      res.status(404).send('Wishes for [' + wishlistName + '] not found');
     }
     const wishlistData = {name: wishlistName, items: rows};
     res.json(wishlistData);
@@ -63,7 +63,7 @@ app.post('/createWishlist/:name', function (req, res) {
   const { name } = req.params;
   connection.query('INSERT INTO wishlists (name) VALUES (?)', [name], function(err, result) {
     if (err) {
-      throw err;
+      res.status(400).send('Failed to create wishlist: ' + name);
     }
     res.json(result.insertId);
   });
@@ -74,7 +74,7 @@ app.post('/updateWishlistName', function (req, res) {
   const { id, name } = req.body;
   connection.query('UPDATE wishlists SET name = ? WHERE id = ?',  [name, id], function(err, result) {
     if (err) {
-      throw err;
+      res.status(400).send('Failed to update the wishlist [' + id + ']');
     }
 
     res.json(result.changedRows);
@@ -86,7 +86,7 @@ app.post('/destroyWishlist/:wishlistId', function (req, res) {
   const { wishlistId } = req.params;
   connection.query('DELETE FROM wishlists WHERE id = ?', [wishlistId], function(err, result) {
     if (err) {
-      throw err;
+      res.status(400).send('Failed to delete the wishlist [' + wishlistId + ']');
     }
   });
   connection.query('DELETE FROM wishlist_items WHERE wishlist_id = ?', [wishlistId], function(err, result) {
@@ -106,7 +106,7 @@ app.post('/addWishlistItem', function (req, res) {
     [item, description, link, price, wishlist_id, priority],
     function(err, result) {
       if (err) {
-        throw err;
+        res.status(400).send('Failed to create the wish ' + item);
       }
 
       res.json(result.insertId);
@@ -121,7 +121,7 @@ app.post('/updateWishlistItem', function (req, res) {
   var query = 'UPDATE wishlist_items SET ';
   var queryParams = [];
   if(!req.body.id) {
-    res.status(400).send('Wishlist Item not specified');
+    res.status(400).send('Wish ID not provided');
   }
   for(param in req.body) {
     if(params.includes(param)) {
@@ -133,7 +133,7 @@ app.post('/updateWishlistItem', function (req, res) {
   query = query.substring(0, query.length - 2) + ' WHERE id = ?';
   connection.query(query, queryParams, function(err, result) {
     if (err) {
-      throw err;
+      res.status(400).send('Failed to update wish [' + id + ']');
     }
     res.json(result.changedRows);
   });
@@ -144,7 +144,7 @@ app.post('/removeWishlistItem/:wishlistItemId', function (req, res) {
   const { wishlistItemId } = req.params;
   connection.query('DELETE FROM wishlist_items WHERE id = ?', [wishlistItemId], function(err, result) {
     if (err) {
-      throw err;
+      res.status(400).send('Failed to delete the wish [' + wishlistItemId + ']');
     }
 
     res.json(result.affectedRows);
